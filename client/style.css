@@ -1,0 +1,77 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #2b2b2b;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    overflow: hidden;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    position: relative;
+}
+
+#pasta-btn {
+    width: 100%;
+    height: 100%;
+    min-height: 88px;
+    background: #4a90e2;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: background 0.12s ease, transform 0.08s ease;
+    user-select: none;
+}
+
+#pasta-btn:hover {
+    background: #5b9cf0;
+}
+
+#pasta-btn:active {
+    transform: scale(0.97);
+    background: #3a7fd0;
+}
+
+#pasta-btn:disabled,
+#pasta-btn.busy {
+    background: #6a6a6a;
+    cursor: default;
+    transform: none;
+}
+
+.toast {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 10px;
+    text-align: center;
+    font-size: 12px;
+    color: #e6e6e6;
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 6px;
+    padding: 6px 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+.toast.error {
+    background: rgba(160, 40, 40, 0.9);
+}

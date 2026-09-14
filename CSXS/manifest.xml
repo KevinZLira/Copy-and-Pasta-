@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionManifest Version="9.0" ExtensionBundleId="com.copyandpasta.panel"
+    ExtensionBundleVersion="1.0.0"
+    ExtensionBundleName="Copy and PASTA"
+    xmlns:ExtensionBundleId="http://ns.adobe.com/extension">
+    <ExtensionList>
+        <Extension Id="com.copyandpasta.panel.main" Version="1.0.0" />
+    </ExtensionList>
+    <ExecutionEnvironment>
+        <HostList>
+            <!-- Premiere Pro CC 2020+ (moderno). Baixe a versão mínima
+                 do RequiredRuntimeVersion abaixo se precisar suportar
+                 versões mais antigas do Premiere. -->
+            <Host Name="PPRO" Version="[14.0,99.9]" />
+        </HostList>
+        <LocaleList>
+            <Locale Code="All" />
+        </LocaleList>
+        <RequiredRuntimeList>
+            <RequiredRuntime Name="CSXS" Version="9.0" />
+        </RequiredRuntimeList>
+    </ExecutionEnvironment>
+    <DispatchInfoList>
+        <Extension Id="com.copyandpasta.panel.main">
+            <DispatchInfo>
+                <Resources>
+                    <MainPath>./client/index.html</MainPath>
+                    <ScriptPath>./host/index.jsx</ScriptPath>
+                    <CEFCommandLine>
+                        <Parameter>--enable-nodejs</Parameter>
+                        <Parameter>--mixed-context</Parameter>
+                    </CEFCommandLine>
+                </Resources>
+                <Lifecycle>
+                    <AutoVisible>true</AutoVisible>
+                </Lifecycle>
+                <UI>
+                    <Type>Panel</Type>
+                    <Menu>Copy and PASTA</Menu>
+                    <Geometry>
+                        <Size>
+                            <Height>160</Height>
+                            <Width>220</Width>
+                        </Size>
+                        <MinSize>
+                            <Height>120</Height>
+                            <Width>160</Width>
+                        </MinSize>
+                        <MaxSize>
+                            <Height>400</Height>
+                            <Width>400</Width>
+                        </MaxSize>
+                    </Geometry>
+                </UI>
+            </DispatchInfo>
+        </Extension>
+    </DispatchInfoList>
+</ExtensionManifest>
