@@ -40,10 +40,10 @@ body {
 }
 
 .mascot {
-    width: 72%;
-    max-width: 286px;
+    width: 55%;
+    max-width: 220px;
     object-fit: contain;
-    margin-top: 4%;
+    margin-top: -6%;
     margin-bottom: 4%;
     user-select: none;
     pointer-events: none;
