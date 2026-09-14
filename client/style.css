@@ -32,10 +32,11 @@ body {
 }
 
 .title {
-    width: 78%;
-    max-width: 320px;
+    width: 93.6%;
+    max-width: 384px;
     object-fit: contain;
     position: relative;
+    left: -30px;
     z-index: 1;
     user-select: none;
     pointer-events: none;
