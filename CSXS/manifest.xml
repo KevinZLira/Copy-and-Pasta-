@@ -39,16 +39,16 @@
                     <Menu>Copy and PASTA</Menu>
                     <Geometry>
                         <Size>
-                            <Height>460</Height>
-                            <Width>340</Width>
+                            <Height>360</Height>
+                            <Width>360</Width>
                         </Size>
                         <MinSize>
-                            <Height>320</Height>
+                            <Height>240</Height>
                             <Width>240</Width>
                         </MinSize>
                         <MaxSize>
-                            <Height>900</Height>
-                            <Width>700</Width>
+                            <Height>800</Height>
+                            <Width>800</Width>
                         </MaxSize>
                     </Geometry>
                 </UI>
