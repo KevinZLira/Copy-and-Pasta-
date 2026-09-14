@@ -24,7 +24,7 @@ O Premiere Pro expõe um DOM de scripting via **ExtendScript** (arquivos `.jsx` 
 - `app.project.rootItem` / `ProjectItem.children` — permite localizar o `ProjectItem` recém-importado (buscando por `getMediaPath()` igual ao caminho do arquivo importado).
 - `app.project.activeSequence` — a sequência ativa; se `undefined`, não há timeline aberta.
 - `sequence.getPlayerPosition()` — retorna um objeto `Time` com a posição atual do playhead (`.ticks`).
-- `sequence.videoTracks[i]` — cada `Track` tem `isLocked()` e o método **`insertClip(projectItem, time)`**, que insere o clipe na posição indicada empurrando (ripple insert) o conteúdo posterior da faixa, **sem sobrescrever** nada — ao contrário de `overwriteClip()`.
+- `sequence.videoTracks[i]` — cada `Track` tem `isLocked()`, `clips` (com `.start`/`.end` de cada `TrackItem`) e o método **`insertClip(projectItem, time)`**, que insere o clipe na posição indicada empurrando (ripple insert) o conteúdo posterior **daquela faixa**, sem sobrescrever nada — ao contrário de `overwriteClip()`. Para não cortar/sobrepor um clipe já existente na própria faixa, o plugin escolhe a faixa (ver seção 6) antes de inserir, em vez de sempre usar a primeira faixa disponível.
 - A **duração padrão de still image** (Preferências → Timeline) é aplicada automaticamente pelo próprio Premiere no momento da importação/criação do `ProjectItem`, então não é necessário calculá-la manualmente.
 
 Isso cobre 100% do que o plugin precisa fazer dentro do Premiere: importar + inserir no playhead + respeitar faixas bloqueadas + não apagar clipes.
@@ -156,6 +156,6 @@ Casos de erro para validar:
 ## 6. Comportamento por design
 
 - Um único botão, sem seletor de arquivo, sem diálogo de import, sem drag-and-drop.
-- Nunca sobrescreve clipes existentes (usa `insertClip`, não `overwriteClip`).
+- Nunca sobrescreve clipes existentes (usa `insertClip`, não `overwriteClip`) e nunca corta um clipe ao meio: a faixa de destino é escolhida em ordem de preferência — (1) uma faixa de vídeo totalmente vazia, (2) uma faixa com espaço livre exatamente na posição do playhead, (3) uma nova faixa de vídeo criada automaticamente se nenhuma das anteriores servir.
 - Nunca trava a UI com diálogos — todo feedback é uma mensagem curta (toast) de ~2.5s.
 - Arquivos temporários são criados em uma pasta única por clique dentro do diretório temporário do SO (`os.tmpdir()`), sem necessidade de limpeza manual pelo usuário.
