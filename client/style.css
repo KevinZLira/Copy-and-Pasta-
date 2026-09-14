@@ -35,8 +35,6 @@ body {
     width: 78%;
     max-width: 320px;
     object-fit: contain;
-    position: relative;
-    z-index: 1;
     user-select: none;
     pointer-events: none;
 }
@@ -45,9 +43,7 @@ body {
     width: 72%;
     max-width: 286px;
     object-fit: contain;
-    position: relative;
-    z-index: 2;
-    margin-top: -8%;
+    margin-top: 4%;
     margin-bottom: 4%;
     user-select: none;
     pointer-events: none;
