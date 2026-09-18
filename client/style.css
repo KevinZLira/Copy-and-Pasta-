@@ -55,6 +55,7 @@ body {
 }
 
 #pasta-btn {
+    position: relative;
     width: 82%;
     max-width: 320px;
     padding: 0;
@@ -72,8 +73,23 @@ body {
     user-select: none;
 }
 
+#pasta-btn .btn-pressed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+
+#pasta-btn:active .btn-normal {
+    opacity: 0;
+}
+
+#pasta-btn:active .btn-pressed {
+    opacity: 1;
+}
+
 #pasta-btn:hover {
-    filter: brightness(1.1);
+    filter: brightness(1.05);
 }
 
 #pasta-btn:active {
@@ -85,6 +101,16 @@ body {
     filter: grayscale(0.6) brightness(0.8);
     cursor: default;
     transform: none;
+}
+
+#pasta-btn:disabled:active .btn-normal,
+#pasta-btn.busy:active .btn-normal {
+    opacity: 1;
+}
+
+#pasta-btn:disabled:active .btn-pressed,
+#pasta-btn.busy:active .btn-pressed {
+    opacity: 0;
 }
 
 .toast {
