@@ -36,7 +36,6 @@ body {
     max-width: 320px;
     object-fit: contain;
     position: relative;
-    left: -20px;
     z-index: 1;
     user-select: none;
     pointer-events: none;
