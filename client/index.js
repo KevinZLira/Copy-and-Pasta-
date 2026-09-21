@@ -62,7 +62,7 @@
             var tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "copy-and-pasta-"));
 
             if (platform === "win32") {
-                var outFile = path.join(tmpDir, "clip.png");
+                var winBasePath = path.join(tmpDir, "clip");
                 var psScript = path.join(extRoot, "native", "win-clipboard.ps1");
                 execFile(
                     "powershell.exe",
@@ -73,13 +73,19 @@
                         "-STA",
                         "-File",
                         psScript,
-                        outFile
+                        winBasePath
                     ],
                     { timeout: 10000 },
                     function (err, stdout) {
                         var out = (stdout || "").trim();
-                        if (out.indexOf("OK") === 0 && fs.existsSync(outFile)) {
-                            resolve(outFile);
+                        if (out.indexOf("OK:") === 0) {
+                            var winExt = out.split(":")[1];
+                            var winOutFile = winBasePath + "." + winExt;
+                            if (fs.existsSync(winOutFile)) {
+                                resolve(winOutFile);
+                            } else {
+                                reject(new Error("CLIPBOARD_ERROR"));
+                            }
                         } else if (out.indexOf("NO_IMAGE") === 0) {
                             reject(new Error("NO_IMAGE"));
                         } else {

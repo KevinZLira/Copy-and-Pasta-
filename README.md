@@ -53,7 +53,9 @@ Não sozinha. Nem CEP nem a UXP mais recente para Premiere Pro expõem uma API n
 
 ### 1.6 Limitações conhecidas
 
-- Cobre os formatos que o SO normalmente coloca na clipboard ao "copiar imagem" (PNG, JPEG, bitmap genérico no Windows via `Clipboard.GetImage()`; PNG/JPEG/TIFF no macOS). Formatos raros ou aplicativos que colocam apenas referências de arquivo (em vez de dados de imagem) na clipboard não são cobertos.
+- Os helpers nativos primeiro checam se a clipboard tem um **arquivo de verdade** (ex.: `Ctrl+C`/`Cmd+C` num arquivo no Explorer/Finder) e, nesse caso, preservam o formato original — inclusive GIF animado e WebP. Só caem para um bitmap genérico salvo como PNG quando a clipboard só tem dados de imagem "crus" (ex.: "Copiar imagem" em um navegador).
+- **Importante:** quando a imagem vem de "Copiar imagem" num navegador (em vez de copiar o arquivo em si), o próprio navegador normalmente já rasteriza a imagem em um bitmap estático antes de colocá-la na clipboard — isso é comportamento do navegador/SO, fora do controle do plugin, e faz o GIF perder a animação e nunca aparecer como WebP nesse caminho.
+- O Premiere Pro **não tem suporte nativo a importação de WebP** — mesmo que o arquivo original seja preservado corretamente pelo plugin, o `importFiles` do Premiere pode falhar (`IMPORT_FAILED`) para esse formato. GIF é suportado nativamente pelo Premiere.
 - Requer que Node.js integration esteja habilitada (`--enable-nodejs`), disponível em Premiere Pro que suporte CSXS 9 (Premiere Pro CC 2020 em diante). Para versões mais antigas, ajuste `RequiredRuntime` no manifest — mas o acesso a `child_process` pode se comportar de forma diferente.
 - A busca do `ProjectItem` recém-importado é feita comparando `getMediaPath()`; como cada clique gera um arquivo temporário com nome único, isso é confiável na prática.
 - O plugin não lê imagens vindas de outra instância do próprio Premiere (ex. copiar um clipe da timeline) — o escopo é apenas imagens de outros aplicativos/SO, como pedido.
