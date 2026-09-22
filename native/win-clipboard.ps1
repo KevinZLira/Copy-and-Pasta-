@@ -3,9 +3,11 @@
 # Uso: powershell.exe -NoProfile -ExecutionPolicy Bypass -STA -File win-clipboard.ps1 <caminho-base-sem-extensao>
 #
 # Prioriza um arquivo de verdade copiado (Ctrl+C num arquivo no Explorer),
-# preservando o formato original (gif animado, webp, etc.). Só cai para
-# bitmap genérico (salvo como PNG) quando a clipboard tem apenas dados de
-# imagem "crus" (ex.: "Copiar imagem" em um navegador).
+# preservando o formato original (gif animado, webp, etc.). Em seguida
+# tenta os bytes crus de PNG que o app de origem também costuma colocar na
+# clipboard (formato "PNG"), que preservam transparência corretamente. Só
+# cai para o Bitmap genérico do .NET por último, pois esse caminho NÃO
+# preserva canal alfa (o fundo transparente vira preto).
 #
 # Saida em stdout:
 #   "OK:<ext>"  -> imagem salva em <caminho-base>.<ext>
@@ -33,6 +35,20 @@ try {
                 Write-Output "OK:$($ext.TrimStart('.'))"
                 exit 0
             }
+        }
+    }
+
+    $dataObj = [System.Windows.Forms.Clipboard]::GetDataObject()
+
+    if ($null -ne $dataObj -and $dataObj.GetDataPresent("PNG")) {
+        $pngStream = $dataObj.GetData("PNG")
+        if ($pngStream -is [System.IO.Stream]) {
+            $pngFile = "$BasePath.png"
+            $bytes = New-Object byte[] $pngStream.Length
+            $pngStream.Read($bytes, 0, $pngStream.Length) | Out-Null
+            [System.IO.File]::WriteAllBytes($pngFile, $bytes)
+            Write-Output "OK:png"
+            exit 0
         }
     }
 
