@@ -40,23 +40,43 @@ try {
 
     $dataObj = [System.Windows.Forms.Clipboard]::GetDataObject()
 
-    if ($null -ne $dataObj -and $dataObj.GetDataPresent("PNG")) {
-        $pngStream = $dataObj.GetData("PNG")
-        if ($pngStream -is [System.IO.Stream]) {
-            $pngFile = "$BasePath.png"
-            $bytes = New-Object byte[] $pngStream.Length
-            $pngStream.Read($bytes, 0, $pngStream.Length) | Out-Null
-            [System.IO.File]::WriteAllBytes($pngFile, $bytes)
-            Write-Output "OK:png"
-            exit 0
+    if ($null -ne $dataObj) {
+        foreach ($formatName in @("PNG", "image/png")) {
+            if ($dataObj.GetDataPresent($formatName)) {
+                $raw = $dataObj.GetData($formatName)
+                $bytes = $null
+
+                if ($raw -is [System.IO.Stream]) {
+                    $ms = New-Object System.IO.MemoryStream
+                    $raw.CopyTo($ms)
+                    $bytes = $ms.ToArray()
+                } elseif ($raw -is [byte[]]) {
+                    $bytes = $raw
+                }
+
+                if ($null -ne $bytes -and $bytes.Length -gt 0) {
+                    $pngFile = "$BasePath.png"
+                    [System.IO.File]::WriteAllBytes($pngFile, $bytes)
+                    Write-Output "OK:png"
+                    exit 0
+                }
+            }
         }
     }
 
     if ([System.Windows.Forms.Clipboard]::ContainsImage()) {
         $img = [System.Windows.Forms.Clipboard]::GetImage()
         if ($null -ne $img) {
+            # Redesenha em um bitmap 32bppArgb explícito para não perder o
+            # canal alfa que a imagem original eventualmente já tenha.
+            $argbBmp = New-Object System.Drawing.Bitmap($img.Width, $img.Height, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+            $gfx = [System.Drawing.Graphics]::FromImage($argbBmp)
+            $gfx.Clear([System.Drawing.Color]::Transparent)
+            $gfx.DrawImage($img, 0, 0, $img.Width, $img.Height)
+            $gfx.Dispose()
+
             $pngFile = "$BasePath.png"
-            $img.Save($pngFile, [System.Drawing.Imaging.ImageFormat]::Png)
+            $argbBmp.Save($pngFile, [System.Drawing.Imaging.ImageFormat]::Png)
             Write-Output "OK:png"
             exit 0
         }
